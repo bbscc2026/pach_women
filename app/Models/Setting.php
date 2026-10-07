@@ -41,28 +41,29 @@ class Setting extends Model
      */
     public static function allCached(): array
     {
-        $cached = Cache::get(self::CACHE_KEY);
-
-        if (is_array($cached)) {
-            return $cached;
-        }
-
-        // Before migrations run (fresh install) there is nothing to load — and nothing to cache.
+        // On a fresh install the database (and the database cache) may not exist yet:
+        // fall back to config defaults instead of breaking every request and artisan command.
         try {
+            $cached = Cache::get(self::CACHE_KEY);
+
+            if (is_array($cached)) {
+                return $cached;
+            }
+
             if (! Schema::hasTable('settings')) {
                 return [];
             }
+
+            $settings = static::query()->pluck('value', 'key')
+                ->map(fn ($value, $key) => in_array($key, self::ENCRYPTED, true) && filled($value) ? self::decrypt($value) : $value)
+                ->all();
+
+            Cache::forever(self::CACHE_KEY, $settings);
+
+            return $settings;
         } catch (Throwable) {
             return [];
         }
-
-        $settings = static::query()->pluck('value', 'key')
-            ->map(fn ($value, $key) => in_array($key, self::ENCRYPTED, true) && filled($value) ? self::decrypt($value) : $value)
-            ->all();
-
-        Cache::forever(self::CACHE_KEY, $settings);
-
-        return $settings;
     }
 
     /**
