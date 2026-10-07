@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: 'Cormorant Garamond', ui-serif, Georgia, serif;
+
+    --color-ink: #141414;
+    --color-cream: #f7f3ee;
+    --color-sand: #e9e1d6;
+    --color-clay: #9c6b4e;
+    --color-sale: #b4372f;
+
+    --animate-slide-up: slide-up 0.25s ease-out;
+    --animate-hero-progress: hero-progress 5.5s linear forwards;
+
+    @keyframes hero-progress {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes slide-up {
+        from {
+            transform: translateY(12px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+}
+
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-white font-sans text-ink antialiased;
+    }
+
+    h1, h2, h3 {
+        @apply font-serif tracking-tight;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-ink;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+/* ---------- Motion: small, quiet, and off for people who prefer reduced motion ---------- */
+@layer base {
+    @keyframes page-in {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* Each page (including wire:navigate visits) eases in. */
+    main {
+        animation: page-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+
+    @keyframes reveal {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /*
+     * Scroll reveal, pure CSS: [data-reveal] elements fade up as they scroll into view.
+     * Being CSS-only it survives Livewire re-renders; browsers without scroll-driven
+     * animations simply show the content.
+     */
+    @supports (animation-timeline: view()) {
+        [data-reveal] {
+            animation: reveal linear both;
+            animation-timeline: view();
+            animation-range: entry 0% entry 35%;
+        }
+
+        /* Inside horizontal swipe rows the vertical timeline doesn't apply. */
+        .scroll-row [data-reveal] {
+            animation: none;
+        }
+    }
+
+    /* Arrow icons nudge forward on hover. */
+    .btn > svg:last-child:not(:first-child),
+    .nudge > svg:last-child {
+        transition: transform 0.25s ease;
+    }
+
+    .btn:hover > svg:last-child:not(:first-child),
+    .nudge:hover > svg:last-child {
+        transform: translateX(3px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        main {
+            animation: none;
+        }
+
+        [data-reveal] {
+            animation: none !important;
+        }
+    }
+}
+
+/* Text written in the admin rich editor (policy pages). */
+@utility rich-content {
+    @apply space-y-5 leading-relaxed text-neutral-700;
+
+    & h2 {
+        @apply mt-10 font-serif text-2xl font-semibold text-ink;
+    }
+
+    & h3 {
+        @apply mt-6 text-lg font-medium text-ink;
+    }
+
+    & ul {
+        @apply list-disc space-y-2 pl-5;
+    }
+
+    & ol {
+        @apply list-decimal space-y-2 pl-5;
+    }
+
+    & a {
+        @apply text-ink underline underline-offset-4 hover:text-clay;
+    }
+
+    & strong {
+        @apply font-medium text-ink;
+    }
+
+    & blockquote {
+        @apply border-l-2 border-ink bg-cream px-4 py-3;
+    }
+}
+
+@utility container-shop {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+@utility btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 px-6 py-3 text-sm font-medium tracking-wide uppercase transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility btn-dark {
+    @apply btn bg-ink text-white hover:bg-black/80;
+}
+
+@utility btn-light {
+    @apply btn border border-ink bg-white text-ink hover:bg-ink hover:text-white;
+}
+
+/* 16px on phones stops iOS Safari from zooming into fields. */
+@utility input {
+    @apply block min-h-12 w-full rounded-none border border-sand bg-white px-3.5 py-2.5 text-base placeholder:text-neutral-400 focus:border-ink focus:ring-0 focus:outline-none sm:text-sm;
+}
+
+@utility label {
+    @apply mb-1.5 block text-xs font-medium tracking-wide text-neutral-600 uppercase;
+}
+
+@utility error {
+    @apply mt-1 text-xs text-sale;
+}
+
+@utility section-title {
+    @apply font-serif text-3xl font-semibold sm:text-4xl;
+}
+
+@utility chip {
+    @apply inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 border border-sand px-4 text-xs tracking-wide uppercase transition hover:border-ink;
+}
+
+@utility chip-active {
+    @apply chip border-ink bg-ink text-white hover:border-ink;
+}
+
+/* Horizontal scroller without a visible scrollbar. */
+@utility scroll-row {
+    @apply flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@utility pb-safe {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
