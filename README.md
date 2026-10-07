@@ -77,7 +77,20 @@ Policy page text (shipping, returns, privacy, terms, contact) is in `resources/v
 - Setting an order to **Cancelled** in the admin puts its stock back.
 - Add the courier tracking number on the order in the admin; customers see it under *My orders*.
 
-## Deploy to Hostinger (shared hosting)
+## Live site (Hostinger)
+
+pachwomen.com runs on the Hostinger Business plan: code in `~/domains/pachwomen.com/app`,
+`public_html` is a symlink to `app/public`, PHP 8.4 (`/opt/alt/php84/usr/bin/php`), MySQL `u710748228_pachwomen`.
+
+**Update the live site** after pushing to GitHub (run `npm run build` and commit `public/build` first if CSS/JS changed):
+
+```bash
+ssh -p 65002 u710748228@62.72.28.54 "bash ~/domains/pachwomen.com/app/deploy.sh"
+```
+
+Reset or add an admin login: `php artisan shop:admin you@example.com` (on the server, in the app folder).
+
+## Deploy to Hostinger from scratch (shared hosting)
 
 1. In hPanel create a MySQL database and user, and turn on SSH (Advanced → SSH Access).
 2. On your computer run `npm run build` (the server does not need Node.js).
