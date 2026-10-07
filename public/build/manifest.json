@@ -1,0 +1,61 @@
+{
+  "_cormorant-garamond-500-normal-BsRWmXhO.woff2": {
+    "file": "assets/cormorant-garamond-500-normal-BsRWmXhO.woff2",
+    "src": "_cormorant-garamond-500-normal-BsRWmXhO.woff2"
+  },
+  "_cormorant-garamond-500-normal-zIXX3Q-H.woff": {
+    "file": "assets/cormorant-garamond-500-normal-zIXX3Q-H.woff",
+    "src": "_cormorant-garamond-500-normal-zIXX3Q-H.woff"
+  },
+  "_cormorant-garamond-600-normal-2CBVLo0M.woff": {
+    "file": "assets/cormorant-garamond-600-normal-2CBVLo0M.woff",
+    "src": "_cormorant-garamond-600-normal-2CBVLo0M.woff"
+  },
+  "_cormorant-garamond-600-normal-Co1r35X9.woff2": {
+    "file": "assets/cormorant-garamond-600-normal-Co1r35X9.woff2",
+    "src": "_cormorant-garamond-600-normal-Co1r35X9.woff2"
+  },
+  "_fonts-DmFseLfz.css": {
+    "file": "assets/fonts-DmFseLfz.css",
+    "src": "_fonts-DmFseLfz.css"
+  },
+  "_jost-400-normal-C7S-3Ky6.woff": {
+    "file": "assets/jost-400-normal-C7S-3Ky6.woff",
+    "src": "_jost-400-normal-C7S-3Ky6.woff"
+  },
+  "_jost-400-normal-q-RKOgPK.woff2": {
+    "file": "assets/jost-400-normal-q-RKOgPK.woff2",
+    "src": "_jost-400-normal-q-RKOgPK.woff2"
+  },
+  "_jost-500-normal-41lBe9I9.woff2": {
+    "file": "assets/jost-500-normal-41lBe9I9.woff2",
+    "src": "_jost-500-normal-41lBe9I9.woff2"
+  },
+  "_jost-500-normal-B-AtzreL.woff": {
+    "file": "assets/jost-500-normal-B-AtzreL.woff",
+    "src": "_jost-500-normal-B-AtzreL.woff"
+  },
+  "_jost-600-normal-Bv_M0d15.woff": {
+    "file": "assets/jost-600-normal-Bv_M0d15.woff",
+    "src": "_jost-600-normal-Bv_M0d15.woff"
+  },
+  "_jost-600-normal-C497H-z9.woff2": {
+    "file": "assets/jost-600-normal-C497H-z9.woff2",
+    "src": "_jost-600-normal-C497H-z9.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-CBLJoNLI.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-GivMX2Mw.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
