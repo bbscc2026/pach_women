@@ -12,7 +12,9 @@ const NEVER_CACHE = [/^\/checkout/, /^\/payment\//, /^\/reset-password\//, /^\/o
 
 self.addEventListener('install', (event) => {
     // Don't take over straight away: the page shows "Update" and the user decides.
-    event.waitUntil(caches.open(STATIC_CACHE).then((cache) => cache.addAll(PRECACHE)));
+    // cache: 'reload' skips the browser's HTTP cache, so files like /pwa.js (cached for days by
+    // the host) are fetched fresh for each new version.
+    event.waitUntil(caches.open(STATIC_CACHE).then((cache) => cache.addAll(PRECACHE.map((url) => new Request(url, { cache: 'reload' })))));
 });
 
 self.addEventListener('activate', (event) => {

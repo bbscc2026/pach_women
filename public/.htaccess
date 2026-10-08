@@ -29,3 +29,10 @@
     AddType application/manifest+json .webmanifest
     AddType application/javascript .js
 </IfModule>
+
+# The app helper must not be cached for days by browsers (its name has no version hash).
+<IfModule mod_headers.c>
+    <FilesMatch "^(pwa\.js|site\.webmanifest|admin\.webmanifest)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+</IfModule>
