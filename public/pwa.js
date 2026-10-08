@@ -84,9 +84,12 @@
             window.location.reload();
         });
 
-        const offerUpdate = (worker) => toast('New version available', () => {
+        // Always activate whichever version is waiting *now* (a newer deploy may have replaced the one first offered).
+        const offerUpdate = () => toast('New version available', async () => {
             updateRequested = true;
-            worker.postMessage('SKIP_WAITING');
+            const registration = await navigator.serviceWorker.getRegistration();
+            if (registration?.waiting) registration.waiting.postMessage('SKIP_WAITING');
+            else window.location.reload();
         }, 'Update');
 
         window.addEventListener('load', () => {
