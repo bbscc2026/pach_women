@@ -74,14 +74,20 @@
 
     // ---------- Service worker + updates ----------
     if ('serviceWorker' in navigator) {
+        // Reload only after the user tapped "Update" — not when offline support first switches on
+        // during a visitor's first page view.
+        let updateRequested = false;
         let reloading = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (reloading) return;
+            if (!updateRequested || reloading) return;
             reloading = true;
             window.location.reload();
         });
 
-        const offerUpdate = (worker) => toast('New version available', () => worker.postMessage('SKIP_WAITING'), 'Update');
+        const offerUpdate = (worker) => toast('New version available', () => {
+            updateRequested = true;
+            worker.postMessage('SKIP_WAITING');
+        }, 'Update');
 
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js', { scope: '/' }).then((registration) => {
