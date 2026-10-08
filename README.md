@@ -47,6 +47,15 @@ Values saved in **Site settings** override the defaults below.
 - **Orders** opens on the **To ship** tab. Tap an order for one-tap **Mark shipped** (with tracking number), **Mark delivered**, **WhatsApp customer**, **Call** and **Cancel**. The list refreshes itself every 30 seconds.
 - Product photos can be taken straight from the phone camera; they are resized on the phone before uploading.
 
+### Installable app (shop and admin)
+
+Both `pachwomen.com` and `pachwomen.com/admin` install to a phone's home screen (Chrome menu → **Install app**, or Safari → Share → **Add to Home Screen**) and open full-screen.
+
+- **Offline:** pages you have opened are saved and open without internet; unopened pages show an offline screen. Placing orders and saving changes still need internet.
+- **Updates:** after each deploy, open apps show **"New version available — Update"**; one tap loads the latest. No app store involved.
+- **Privacy:** logging out deletes the saved pages from that phone.
+- Files: `resources/views/pwa/sw.blade.php` (served at `/sw.js`), `public/pwa.js`, `public/site.webmanifest`, `public/admin.webmanifest`, admin tab bar in `resources/views/filament/mobile-tab-bar.blade.php`.
+
 ### Razorpay webhook (recommended)
 
 So payments are recorded even if a customer closes the browser right after paying:
