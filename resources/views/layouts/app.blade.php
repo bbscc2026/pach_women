@@ -7,6 +7,8 @@
     $placeholders = \App\Models\ContentPage::placeholders();
     $announcements = collect(config('shop.announcements'))->filter()->map(fn ($text) => strtr($text, $placeholders))->values()->all();
     $footerPages = once(fn () => \App\Models\ContentPage::active()->get(['slug', 'title']));
+    // Phones get an app-style bar: logo on Home, back arrow + page title everywhere else.
+    $isHome = request()->routeIs('home');
 @endphp
 
 <!DOCTYPE html>
@@ -39,7 +41,7 @@
 <body class="flex min-h-screen flex-col {{ $showTabBar ? 'pb-16 lg:pb-0' : '' }}">
     {{-- Announcement bar: rotates on phones, all messages on desktop (Admin → Site settings) --}}
     @if ($announcements)
-    <div class="bg-ink text-[11px] tracking-[0.2em] text-white uppercase">
+    <div @class(['bg-ink text-[11px] tracking-[0.2em] text-white uppercase', 'hidden md:block' => ! $isHome])>
         <div class="container-shop hidden h-9 items-center justify-center gap-8 md:flex">
             @foreach ($announcements as $text)
                 <span class="flex items-center gap-2">
@@ -62,21 +64,33 @@
     <header x-data="{ menu: false, scrolled: false }" x-effect="document.documentElement.classList.toggle('overflow-hidden', menu)"
             @scroll.window.throttle.100ms="scrolled = window.scrollY > 8"
             :class="scrolled && 'shadow-[0_6px_24px_-12px_rgba(0,0,0,0.18)]'"
-            class="sticky top-0 z-40 border-b border-sand bg-white/95 backdrop-blur transition-shadow duration-300">
-        <div class="container-shop grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-4 lg:flex lg:justify-between">
+            class="app-chrome sticky top-0 z-40 border-b border-sand bg-white/95 backdrop-blur transition-shadow duration-300">
+        <div @class([
+            'container-shop grid h-14 items-center gap-2 lg:flex lg:h-16 lg:justify-between lg:gap-4',
+            'grid-cols-[1fr_auto_1fr]' => $isHome,
+            'grid-cols-[auto_1fr_auto]' => ! $isHome,
+        ])>
             <div class="flex items-center lg:hidden">
-                <button type="button" class="-ml-2.5 flex size-11 items-center justify-center" @click="menu = true" aria-label="Open menu">
-                    <x-heroicon-o-bars-3 class="size-6" />
-                </button>
-                <button type="button" class="flex size-11 items-center justify-center" @click="$dispatch('open-search')" aria-label="Search">
-                    <x-heroicon-o-magnifying-glass class="size-6" />
-                </button>
+                @if ($isHome)
+                    <button type="button" class="-ml-2.5 flex size-11 items-center justify-center" @click="menu = true" aria-label="Open menu">
+                        <x-heroicon-o-bars-3 class="size-6" />
+                    </button>
+                @else
+                    {{-- Back: previous screen, or Home when opened directly from a link --}}
+                    <button type="button" class="-ml-2.5 flex size-11 items-center justify-center rounded-full active:bg-cream" aria-label="Back"
+                            @click="window.pachBack()">
+                        <x-heroicon-o-chevron-left class="size-6" />
+                    </button>
+                @endif
             </div>
 
-            <a href="{{ route('home') }}" wire:navigate class="flex flex-col items-center leading-none lg:items-start" aria-label="PACH WOMEN home">
+            <a href="{{ route('home') }}" wire:navigate @class(['flex-col items-center leading-none lg:flex lg:items-start', 'flex' => $isHome, 'hidden' => ! $isHome]) aria-label="PACH WOMEN home">
                 <span class="font-serif text-2xl font-semibold tracking-[0.3em]">PACH</span>
                 <span class="text-[9px] tracking-[0.55em] text-neutral-500">WOMEN</span>
             </a>
+            @unless ($isHome)
+                <p class="truncate text-center text-[15px] font-medium lg:hidden">{{ $title ?? config('shop.name') }}</p>
+            @endunless
 
             <nav class="hidden items-center gap-7 text-[13px] tracking-wide uppercase lg:flex">
                 <a href="{{ route('shop') }}" wire:navigate @class(['py-2 hover:text-clay', 'border-b border-ink' => request()->routeIs('shop')])>Shop all</a>
@@ -88,10 +102,10 @@
             </nav>
 
             <div class="flex items-center justify-end">
-                <button type="button" class="hidden size-11 items-center justify-center lg:flex" @click="$dispatch('open-search')" aria-label="Search">
+                <button type="button" class="flex size-11 items-center justify-center" @click="$dispatch('open-search')" aria-label="Search">
                     <x-heroicon-o-magnifying-glass class="size-6" />
                 </button>
-                <a href="{{ auth()->check() ? route('account.orders') : route('login') }}" wire:navigate class="hidden size-11 items-center justify-center sm:flex" aria-label="My account">
+                <a href="{{ route('me') }}" wire:navigate class="hidden size-11 items-center justify-center lg:flex" aria-label="My account">
                     <x-heroicon-o-user class="size-6" />
                 </a>
                 <div class="-mr-2.5">
@@ -165,8 +179,8 @@
         {{ $slot }}
     </main>
 
-    {{-- Trust strip --}}
-    <section class="mt-16 border-y border-sand">
+    {{-- Trust strip + footer: desktop/tablet only. On phones the same links live in the "Me" tab. --}}
+    <section class="mt-16 hidden border-y border-sand lg:block">
         <div class="container-shop grid grid-cols-2 gap-x-4 gap-y-6 py-8 lg:grid-cols-4">
             @foreach ([
                 ['truck', 'Fast delivery', 'All over India'],
@@ -187,7 +201,7 @@
         </div>
     </section>
 
-    <footer class="bg-cream">
+    <footer class="hidden bg-cream lg:block">
         <div class="container-shop grid gap-0 py-10 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4 lg:py-14">
             <div class="pb-6 sm:pb-0">
                 <p class="font-serif text-2xl font-semibold tracking-[0.3em]">PACH</p>
@@ -249,8 +263,8 @@
     <a href="https://wa.me/{{ config('shop.contact.whatsapp') }}" target="_blank" rel="noopener"
        @class([
            'fixed right-4 z-30 size-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105',
-           'bottom-20 flex lg:bottom-5' => $showTabBar,
-           'bottom-5 hidden lg:flex' => ! $showTabBar,
+           'bottom-20 flex lg:bottom-5' => $showTabBar && ! request()->routeIs('me'),
+           'bottom-5 hidden lg:flex' => ! $showTabBar || request()->routeIs('me'),
        ])
        aria-label="Chat on WhatsApp">
         <svg class="size-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.89 6.99c0 5.45-4.43 9.88-9.88 9.88m8.41-18.3A11.81 11.81 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89 0-3.18-1.24-6.16-3.48-8.41"/></svg>
@@ -274,11 +288,11 @@
                     Search
                 </button>
                 <livewire:cart-count variant="tab" />
-                @php($accountActive = request()->routeIs('account.*', 'login', 'register'))
-                <a href="{{ auth()->check() ? route('account.orders') : route('login') }}" wire:navigate
+                @php($accountActive = request()->routeIs('me', 'account.*', 'login', 'register', 'page'))
+                <a href="{{ route('me') }}" wire:navigate
                    @class(['flex flex-1 flex-col items-center justify-center gap-0.5 text-[10px] tracking-wide uppercase', 'text-ink' => $accountActive, 'text-neutral-500' => ! $accountActive])>
                     <x-dynamic-component :component="$accountActive ? 'heroicon-s-user' : 'heroicon-o-user'" class="size-6" />
-                    Account
+                    Me
                 </a>
             </div>
         </nav>

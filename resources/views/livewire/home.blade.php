@@ -1,4 +1,13 @@
 <div>
+    {{-- Phone: app-style search pill above the slider --}}
+    <div class="container-shop py-3 lg:hidden">
+        <button type="button" x-data x-on:click="$dispatch('open-search')"
+                class="flex h-11 w-full items-center gap-3 rounded-full border border-sand bg-cream px-4 text-left text-sm text-neutral-500 active:bg-sand">
+            <x-heroicon-o-magnifying-glass class="size-5 text-neutral-600" />
+            Search kurtis, ponchos, festive…
+        </button>
+    </div>
+
     {{-- Hero slider: auto-plays through the visible banners (Admin → Home banners) --}}
     @php
         $slides = $banners->map(fn ($b) => [
@@ -53,14 +62,14 @@
              @touchstart.passive="startX = $event.touches[0].clientX; pause()"
              @touchend="paused = false; swipe($event.changedTouches[0].clientX); schedule()"
              @keydown.left="prev()" @keydown.right="next()"
-             class="relative overflow-hidden bg-cream" aria-roledescription="carousel" aria-label="Featured collections">
+             class="relative mx-4 overflow-hidden rounded-3xl bg-cream md:mx-0 md:rounded-none" aria-roledescription="carousel" aria-label="Featured collections">
         <div class="grid">
             @foreach ($slides as $k => $slide)
                 <div @class(['col-start-1 row-start-1 transition-opacity duration-700 ease-out', 'opacity-0 pointer-events-none' => $k > 0])
                      :class="i === {{ $k }} ? 'opacity-100! z-10 pointer-events-auto!' : 'opacity-0 pointer-events-none'"
                      role="group" aria-roledescription="slide" aria-label="{{ $k + 1 }} of {{ $slides->count() }}">
                     <div class="relative md:container-shop md:grid md:grid-cols-2 md:items-center md:gap-12 md:py-16">
-                        <div class="relative h-[68svh] max-h-[640px] min-h-[420px] overflow-hidden bg-sand md:order-2 md:aspect-[4/5] md:h-auto md:max-h-none md:min-h-0">
+                        <div class="relative h-[58svh] max-h-[560px] min-h-[380px] overflow-hidden bg-sand md:order-2 md:aspect-[4/5] md:h-auto md:max-h-none md:min-h-0">
                             @if ($slide['image'])
                                 <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}" @if ($k === 0) fetchpriority="high" @else loading="lazy" @endif
                                      class="size-full object-cover transition-transform duration-[6000ms] ease-out"

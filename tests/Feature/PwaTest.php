@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\ContentPageSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -57,6 +58,22 @@ class PwaTest extends TestCase
             ->assertSee('pwa-install-banner', false)
             ->assertSee('pw-tabbar', false)
             ->assertSee('New product', false);
+    }
+
+    public function test_me_tab_works_for_guests_and_customers(): void
+    {
+        $this->seed(ContentPageSeeder::class);
+
+        $this->get('/me')->assertOk()->assertSee('Log in')->assertSee('Shipping policy')->assertSee('WhatsApp');
+
+        $user = User::factory()->create(['name' => 'Asha Menon']);
+        $this->actingAs($user)->get('/me')->assertOk()->assertSee('Asha Menon')->assertSee('My orders')->assertSee('Log out');
+    }
+
+    public function test_inner_pages_get_back_button_and_title_on_phones(): void
+    {
+        $this->get('/me')->assertSee('aria-label="Back"', false);
+        $this->get('/')->assertDontSee('aria-label="Back"', false)->assertSee('aria-label="Open menu"', false);
     }
 
     public function test_logging_out_clears_offline_copies(): void

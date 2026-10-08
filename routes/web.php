@@ -7,6 +7,7 @@ use App\Livewire\Auth;
 use App\Livewire\CartPage;
 use App\Livewire\Checkout;
 use App\Livewire\Home;
+use App\Livewire\Me;
 use App\Livewire\ProductShow;
 use App\Livewire\Shop;
 use App\Models\ContentPage;
@@ -25,6 +26,7 @@ Route::get('/shop', Shop::class)->name('shop');
 Route::get('/category/{category}', Shop::class)->name('category');
 Route::get('/product/{product}', ProductShow::class)->name('product');
 Route::get('/cart', CartPage::class)->name('cart');
+Route::get('/me', Me::class)->name('me');
 
 // Installable app: service worker and offline screen (no session needed).
 Route::withoutMiddleware([StartSession::class, ShareErrorsFromSession::class, PreventRequestForgery::class, AddQueuedCookiesToResponse::class, EncryptCookies::class])

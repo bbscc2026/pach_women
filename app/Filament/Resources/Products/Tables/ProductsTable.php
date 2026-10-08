@@ -2,10 +2,14 @@
 
 namespace App\Filament\Resources\Products\Tables;
 
+use App\Models\Product;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -21,47 +25,45 @@ class ProductsTable
     {
         return $table
             ->defaultSort('created_at', 'desc')
+            // Card-style rows (photo, name, price, stock) that fit a phone without sideways scrolling.
             ->columns([
-                ImageColumn::make('images')
-                    ->label('')
-                    ->disk('public')
-                    ->limit(1)
-                    ->imageHeight(56),
-                TextColumn::make('name')
-                    ->searchable(['name', 'sku'])
-                    ->sortable()
-                    // Price under the name, so phones see it without the price columns.
-                    ->description(fn ($record) => inr($record->finalPrice()).($record->onSale() ? ' (sale)' : '').($record->sku ? ' · '.$record->sku : ''))
-                    ->wrap(),
-                TextColumn::make('category.name')
-                    ->sortable()
-                    ->visibleFrom('md'),
-                TextColumn::make('price')
-                    ->label('MRP')
-                    ->money('INR', locale: 'en_IN', decimalPlaces: 0)
-                    ->sortable()
-                    ->visibleFrom('lg'),
-                TextColumn::make('sale_price')
-                    ->money('INR', locale: 'en_IN', decimalPlaces: 0)
-                    ->placeholder('—')
-                    ->color('danger')
-                    ->sortable()
-                    ->visibleFrom('lg'),
-                TextInputColumn::make('stock')
-                    ->type('number')
-                    ->rules(['required', 'integer', 'min:0'])
-                    ->sortable()
-                    ->width('7rem'),
-                ToggleColumn::make('is_active')
-                    ->label('Visible')
-                    ->visibleFrom('sm'),
-                ToggleColumn::make('is_featured')
-                    ->label('Featured')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->date('d M Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Split::make([
+                    ImageColumn::make('images')
+                        ->label('')
+                        ->disk('public')
+                        ->limit(1)
+                        ->imageHeight(64)
+                        ->grow(false),
+
+                    Stack::make([
+                        TextColumn::make('name')
+                            ->searchable(['name', 'sku'])
+                            ->sortable()
+                            ->weight(FontWeight::Medium)
+                            ->wrap(),
+                        TextColumn::make('price')
+                            ->label('Price')
+                            ->sortable()
+                            ->formatStateUsing(fn (Product $record) => inr($record->finalPrice()).($record->onSale() ? '  (MRP '.inr($record->price).')' : ''))
+                            ->color(fn (Product $record) => $record->onSale() ? 'danger' : null),
+                        TextColumn::make('category.name')
+                            ->color('gray')
+                            ->size('xs')
+                            ->formatStateUsing(fn (string $state, Product $record) => $state.($record->sku ? ' · '.$record->sku : '')),
+                        // Stock sits under the name so the name gets the full width on phones.
+                        TextInputColumn::make('stock')
+                            ->type('number')
+                            ->rules(['required', 'integer', 'min:0'])
+                            ->sortable()
+                            ->prefix('Stock')
+                            ->extraAttributes(['style' => 'max-width: 9rem']),
+                    ])->space(2),
+
+                    ToggleColumn::make('is_active')
+                        ->label('Visible')
+                        ->grow(false)
+                        ->visibleFrom('sm'),
+                ]),
             ])
             ->filters([
                 SelectFilter::make('category')
@@ -76,7 +78,7 @@ class ProductsTable
                     ->query(fn (Builder $query) => $query->whereNotNull('sale_price')),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->iconButton(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -130,6 +130,64 @@
     }
 }
 
+/* ---------- Installed-app feel ---------- */
+@layer base {
+    @media (display-mode: standalone) {
+        /* No rubber-band flash of white when overscrolling, no text-selection on app chrome. */
+        html,
+        body {
+            overscroll-behavior-y: none;
+        }
+    }
+
+    .app-chrome,
+    nav[aria-label='Main'] {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+
+    .ptr-indicator {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        z-index: 60;
+        display: flex;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        background: #fff;
+        box-shadow: 0 4px 14px rgb(0 0 0 / 0.15);
+        transform: translate(-50%, -48px);
+        transition: transform 0.2s ease;
+        pointer-events: none;
+    }
+
+    .ptr-spinner {
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--color-sand);
+        border-top-color: var(--color-ink);
+        border-radius: 9999px;
+    }
+
+    .ptr-indicator.is-ready .ptr-spinner {
+        border-color: var(--color-ink);
+    }
+
+    .ptr-indicator.is-loading {
+        transform: translate(-50%, 16px) !important;
+    }
+
+    .ptr-indicator.is-loading .ptr-spinner {
+        border-color: var(--color-sand);
+        border-top-color: var(--color-ink);
+        animation: spin 0.7s linear infinite;
+    }
+}
+
 /* Text written in the admin rich editor (policy pages). */
 @utility rich-content {
     @apply space-y-5 leading-relaxed text-neutral-700;
