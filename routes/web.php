@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PwaController;
 use App\Http\Controllers\RazorpayController;
 use App\Livewire\Account;
 use App\Livewire\Auth;
@@ -10,8 +11,13 @@ use App\Livewire\ProductShow;
 use App\Livewire\Shop;
 use App\Models\ContentPage;
 use App\Models\Order;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Http\Request;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 // Storefront
 Route::get('/', Home::class)->name('home');
@@ -19,6 +25,13 @@ Route::get('/shop', Shop::class)->name('shop');
 Route::get('/category/{category}', Shop::class)->name('category');
 Route::get('/product/{product}', ProductShow::class)->name('product');
 Route::get('/cart', CartPage::class)->name('cart');
+
+// Installable app: service worker and offline screen (no session needed).
+Route::withoutMiddleware([StartSession::class, ShareErrorsFromSession::class, PreventRequestForgery::class, AddQueuedCookiesToResponse::class, EncryptCookies::class])
+    ->group(function () {
+        Route::get('/sw.js', [PwaController::class, 'serviceWorker'])->name('pwa.sw');
+        Route::get('/offline', [PwaController::class, 'offline'])->name('pwa.offline');
+    });
 
 // Called by Razorpay's servers (no session, no CSRF token; authenticated by signature).
 Route::post('/payment/razorpay/webhook', [RazorpayController::class, 'webhook'])

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\ClearSiteDataOnLogout;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -34,14 +35,10 @@ class AdminPanelProvider extends PanelProvider
             // Faster page changes, which helps most on phones.
             ->spa()
             ->sidebarCollapsibleOnDesktop()
-            // "Add to Home screen" support so the admin opens like an app.
+            // Installable admin app: works offline (last viewed pages), updates itself, phone tab bar.
             ->favicon(asset('icons/admin-192.png'))
-            ->renderHook(PanelsRenderHook::HEAD_END, fn (): string => '<link rel="manifest" href="'.asset('admin.webmanifest').'">'
-                .'<meta name="theme-color" content="#141414">'
-                .'<meta name="mobile-web-app-capable" content="yes">'
-                .'<meta name="apple-mobile-web-app-capable" content="yes">'
-                .'<meta name="apple-mobile-web-app-title" content="PACH Admin">'
-                .'<link rel="apple-touch-icon" href="'.asset('icons/apple-touch-icon.png').'">')
+            ->renderHook(PanelsRenderHook::HEAD_END, fn () => view('filament.app-head'))
+            ->renderHook(PanelsRenderHook::BODY_END, fn () => auth()->check() ? view('filament.mobile-tab-bar') : '')
             ->brandName('PACH WOMEN')
             ->colors([
                 'primary' => Color::Stone,
@@ -71,6 +68,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                ClearSiteDataOnLogout::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

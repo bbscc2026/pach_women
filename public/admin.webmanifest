@@ -1,14 +1,23 @@
 {
+    "id": "/admin/",
     "name": "PACH WOMEN Admin",
     "short_name": "PACH Admin",
     "description": "Manage orders, products and settings for pachwomen.com",
-    "start_url": "/admin/orders",
+    "start_url": "/admin/orders?source=app",
     "scope": "/admin",
     "display": "standalone",
+    "orientation": "portrait",
     "background_color": "#141414",
     "theme_color": "#141414",
+    "categories": ["business", "productivity"],
     "icons": [
-        { "src": "/icons/admin-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-        { "src": "/icons/admin-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+        { "src": "/icons/admin-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+        { "src": "/icons/admin-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+        { "src": "/icons/admin-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ],
+    "shortcuts": [
+        { "name": "Orders to ship", "url": "/admin/orders", "icons": [{ "src": "/icons/admin-192.png", "sizes": "192x192" }] },
+        { "name": "New product", "url": "/admin/products/create", "icons": [{ "src": "/icons/admin-192.png", "sizes": "192x192" }] },
+        { "name": "Products", "url": "/admin/products", "icons": [{ "src": "/icons/admin-192.png", "sizes": "192x192" }] }
     ]
 }

@@ -25,6 +25,15 @@
     @if (\App\Support\Razorpay::enabled())
         <script src="https://checkout.razorpay.com/v1/checkout.js" defer data-navigate-once></script>
     @endif
+    {{-- Installable app (works offline, updates itself) --}}
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" type="image/png" href="/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="PACH">
+    <script src="/pwa.js" defer data-navigate-once></script>
     @stack('head')
 </head>
 <body class="flex min-h-screen flex-col {{ $showTabBar ? 'pb-16 lg:pb-0' : '' }}">
@@ -141,6 +150,8 @@
                 </nav>
 
                 <div class="space-y-3 border-t border-sand bg-cream px-5 py-5 text-sm pb-safe">
+                    <button type="button" data-pwa-install class="items-center gap-3 font-medium"><x-heroicon-o-device-phone-mobile class="size-5" /> Install the PACH app</button>
+                    <p data-pwa-ios-hint class="text-xs text-neutral-600">Install the app: tap <strong>Share</strong> <x-heroicon-o-arrow-up-on-square class="inline size-4 align-text-bottom" /> then <strong>Add to Home Screen</strong>.</p>
                     <a href="https://wa.me/{{ config('shop.contact.whatsapp') }}" target="_blank" rel="noopener" class="flex items-center gap-3"><x-heroicon-o-chat-bubble-left-right class="size-5" /> Chat on WhatsApp</a>
                     <a href="{{ config('shop.contact.instagram') }}" target="_blank" rel="noopener" class="flex items-center gap-3"><x-heroicon-o-camera class="size-5" /> @pach_women</a>
                     <a href="{{ config('shop.contact.store_map') }}" target="_blank" rel="noopener" class="flex items-center gap-3"><x-heroicon-o-map-pin class="size-5" /> Visit our store</a>
@@ -226,8 +237,11 @@
                 </a>
             </div>
         </div>
-        <div class="border-t border-sand py-5 text-center text-xs text-neutral-500">
-            &copy; {{ date('Y') }} {{ config('shop.name') }}. All rights reserved.
+        <div class="flex flex-col items-center gap-3 border-t border-sand py-5 text-center text-xs text-neutral-500">
+            <button type="button" data-pwa-install class="items-center gap-2 border border-ink px-4 py-2 text-[11px] tracking-[0.15em] text-ink uppercase hover:bg-ink hover:text-white">
+                <x-heroicon-o-device-phone-mobile class="size-4" /> Install the app
+            </button>
+            <span>&copy; {{ date('Y') }} {{ config('shop.name') }}. All rights reserved.</span>
         </div>
     </footer>
 
