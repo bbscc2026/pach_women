@@ -24,7 +24,7 @@ return [
     'hero_interval' => 5.5,
 
     'contact' => [
-        'phone' => env('SHOP_PHONE', '+91 81578 88128'),
+        'phone' => env('SHOP_PHONE', '+91 80865 51501'),
         'whatsapp' => env('SHOP_WHATSAPP', '918086551501'),
         'email' => env('SHOP_EMAIL', 'hello@pachwomen.com'),
         'instagram' => 'https://www.instagram.com/pach_women/',
