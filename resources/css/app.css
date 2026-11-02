@@ -40,8 +40,15 @@
 
 @layer base {
     html {
+        font-size: 15px;
         -webkit-tap-highlight-color: transparent;
         scroll-behavior: smooth;
+    }
+
+    @media (max-width: 639px) {
+        html {
+            font-size: 14px;
+        }
     }
 
     body {
@@ -226,7 +233,14 @@
 }
 
 @utility btn {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 px-6 py-3 text-sm font-medium tracking-wide uppercase transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-medium tracking-wide uppercase transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    min-height: 42px;
+
+    @media (max-width: 639px) {
+        min-height: 40px;
+        padding: 8px 14px;
+        font-size: 11px;
+    }
 }
 
 @utility btn-dark {
@@ -240,6 +254,11 @@
 /* 16px on phones stops iOS Safari from zooming into fields. */
 @utility input {
     @apply block min-h-12 w-full rounded-none border border-sand bg-white px-3.5 py-2.5 text-base placeholder:text-neutral-400 focus:border-ink focus:ring-0 focus:outline-none sm:text-sm;
+
+    @media (max-width: 639px) {
+        min-height: 42px;
+        font-size: 16px;
+    }
 }
 
 @utility label {
@@ -255,7 +274,7 @@
 }
 
 @utility chip {
-    @apply inline-flex min-h-10 shrink-0 items-center justify-center gap-1.5 border border-sand px-4 text-xs tracking-wide uppercase transition hover:border-ink;
+    @apply inline-flex min-h-9 shrink-0 items-center justify-center gap-1.5 border border-sand px-3 text-xs tracking-wide uppercase transition hover:border-ink;
 }
 
 @utility chip-active {
