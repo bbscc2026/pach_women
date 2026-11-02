@@ -28,6 +28,19 @@
     .fi-sidebar-item-button { padding-block: 9px !important; }
     .fi-section, .fi-ta-ctn { border-radius: 12px !important; }
     @media (max-width: 1023px) {
+        .fi-resource-products .fi-header { flex-direction: row !important; align-items: center !important; justify-content: space-between; }
+        .pw-products-table .fi-ta-header-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .pw-products-table .pw-select-toggle { margin: 0; padding: 8px 10px; font-size: 12px; }
+        .pw-products-table .fi-ta-record { padding: 14px 12px !important; }
+        .pw-products-table .fi-ta-record-content-ctn { display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: 100%; }
+        .pw-products-table .fi-ta-split { display: flex !important; align-items: flex-start !important; gap: 12px !important; }
+        .pw-products-table .fi-ta-split > .fi-ta-col { flex: 0 0 64px !important; }
+        .pw-products-table .fi-ta-image img { width: 64px !important; height: 84px !important; object-fit: cover; border-radius: 8px; }
+        .pw-products-table .fi-ta-stack { gap: 5px !important; }
+        .pw-products-table .fi-ta-text { line-height: 1.35; }
+        .pw-products-table .fi-ta-record-content-ctn > .fi-ta-actions { margin-left: 76px; justify-content: flex-end; }
+        .pw-products-table .fi-ta-actions .fi-btn { min-height: 40px; padding-inline: 18px; border-radius: 8px; }
+        .pw-products-table .fi-input-wrp { border-radius: 8px; }
         .fi-wi-stats-overview .fi-section-content-ctn { min-width: 0; }
         .fi-wi-stats-overview-stat { min-width: 0; padding: 14px !important; }
         .fi-wi-stats-overview-stat-label { font-size: 12px !important; overflow-wrap: anywhere; }

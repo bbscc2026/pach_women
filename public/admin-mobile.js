@@ -47,7 +47,8 @@
                 button.textContent = enabled ? 'Done selecting' : 'Select items';
                 button.setAttribute('aria-pressed', String(enabled));
             };
-            table.prepend(button);
+            const toolbar = table.querySelector('.fi-ta-header-toolbar');
+            (toolbar || table).prepend(button);
         });
     };
     document.addEventListener('livewire:navigated', enhance);

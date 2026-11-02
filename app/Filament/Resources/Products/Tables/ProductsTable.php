@@ -24,6 +24,7 @@ class ProductsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->extraAttributes(['class' => 'pw-products-table'])
             ->defaultSort('created_at', 'desc')
             // Card-style rows (photo, name, price, stock) that fit a phone without sideways scrolling.
             ->columns([
@@ -53,7 +54,7 @@ class ProductsTable
                         TextColumn::make('is_active')
                             ->label('Website visibility')
                             ->badge()
-                            ->formatStateUsing(fn ($state) => $state ? 'Visible on website' : 'Hidden from website')
+                            ->formatStateUsing(fn ($state) => $state ? 'Visible' : 'Hidden')
                             ->color(fn ($state) => $state ? 'success' : 'gray'),
                         // Stock sits under the name so the name gets the full width on phones.
                         TextInputColumn::make('stock')
@@ -83,7 +84,7 @@ class ProductsTable
                     ->query(fn (Builder $query) => $query->whereNotNull('sale_price')),
             ])
             ->recordActions([
-                EditAction::make()->label('Edit product')->button(),
+                EditAction::make()->label('Edit')->button(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
