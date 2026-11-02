@@ -31,11 +31,11 @@
     <div class="sticky top-16 z-30 mt-5 border-y border-sand bg-white/95 backdrop-blur">
         <div class="container-shop">
             <div class="grid grid-cols-2 divide-x divide-sand md:hidden">
-                <button type="button" @click="sheet = 'filter'" class="flex h-12 items-center justify-center gap-2 text-xs tracking-wide uppercase">
+                <button type="button" @click="sheet = 'filter'" :aria-expanded="sheet === 'filter'" aria-controls="shop-filter-panel" class="flex h-12 items-center justify-center gap-2 text-xs tracking-wide uppercase">
                     <x-heroicon-o-adjustments-horizontal class="size-5" /> Filter
                     @if ($filterCount)<span class="flex size-5 items-center justify-center rounded-full bg-ink text-[10px] text-white">{{ $filterCount }}</span>@endif
                 </button>
-                <button type="button" @click="sheet = 'sort'" class="flex h-12 items-center justify-center gap-2 text-xs tracking-wide uppercase">
+                <button type="button" @click="sheet = 'sort'" :aria-expanded="sheet === 'sort'" aria-controls="shop-filter-panel" class="flex h-12 items-center justify-center gap-2 text-xs tracking-wide uppercase">
                     <x-heroicon-o-arrows-up-down class="size-5" /> {{ $sorts[$sort] ?? 'Sort' }}
                 </button>
             </div>
@@ -126,7 +126,8 @@
     </div>
 
     {{-- Bottom sheets (phones) --}}
-    <div x-cloak wire:ignore.self x-show="sheet !== null" class="fixed inset-0 z-[60] md:hidden" role="dialog" aria-modal="true" @keydown.escape.window="sheet = null">
+    @teleport('body')
+    <div id="shop-filter-panel" x-cloak wire:ignore.self x-show="sheet !== null" class="fixed inset-0 z-[60] md:hidden" role="dialog" aria-modal="true" :aria-label="sheet === 'sort' ? 'Sort products' : 'Filter products'" @keydown.escape.window="sheet = null">
         <div wire:ignore.self x-show="sheet !== null" x-transition.opacity class="absolute inset-0 bg-black/40" @click="sheet = null"></div>
 
         <div wire:ignore.self x-show="sheet === 'filter'" x-transition:enter="transition duration-300 ease-out" x-transition:enter-start="translate-y-full" x-transition:leave="transition duration-200" x-transition:leave-end="translate-y-full"
@@ -187,4 +188,5 @@
             </ul>
         </div>
     </div>
+    @endteleport
 </div>
