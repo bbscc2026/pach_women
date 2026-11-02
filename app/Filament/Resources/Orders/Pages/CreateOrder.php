@@ -33,7 +33,11 @@ class CreateOrder extends CreateRecord
             ]),
             Section::make('Products')->description('Prices are taken from the catalogue when the order is saved. Stock is reserved immediately.')->schema([
                 Repeater::make('lines')->minItems(1)->maxItems(50)->defaultItems(1)->columns(3)->schema([
-                    Select::make('product_id')->label('Product')->options(fn () => Product::orderBy('name')->get()->mapWithKeys(fn (Product $p) => [$p->id => $p->name.' — '.inr($p->finalPrice()).' · '.$p->stock.' left']))->searchable()->required(),
+                    Select::make('product_id')->label('Product')
+                        ->options(fn () => Product::orderBy('name')->get()->mapWithKeys(fn (Product $product) => [$product->id => view('filament.product-option', ['product' => $product])->render()]))
+                        ->allowHtml()
+                        ->searchable()
+                        ->required(),
                     Select::make('size')->options(array_combine(Shop::SIZES, Shop::SIZES))->helperText('Select a size for sized products.'),
                     TextInput::make('quantity')->numeric()->integer()->minValue(1)->maxValue(1000)->default(1)->required(),
                 ])->addActionLabel('Add another product'),
