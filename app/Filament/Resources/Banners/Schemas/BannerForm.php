@@ -27,7 +27,8 @@ class BannerForm
                             ->maxLength(200)
                             ->columnSpanFull(),
                         FileUpload::make('image')
-                            ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'])
+                                    ->saveUploadedFileUsing(fn (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file) => \App\Support\PhotoUpload::save($file, 'banners'))
                             ->disk('public')
                             ->directory('banners')
                             ->imageEditor()

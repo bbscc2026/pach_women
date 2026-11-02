@@ -38,7 +38,8 @@ class CategoryForm
                             ->rows(3)
                             ->columnSpanFull(),
                         FileUpload::make('image')
-                            ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'])
+                                    ->saveUploadedFileUsing(fn (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file) => \App\Support\PhotoUpload::save($file, 'categories'))
                             ->disk('public')
                             ->directory('categories')
                             ->imageEditor()

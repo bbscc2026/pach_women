@@ -59,13 +59,14 @@ class ProductForm
                             ->schema([
                                 FileUpload::make('images')
                                     ->hiddenLabel()
-                                    ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'])
+                                    ->saveUploadedFileUsing(fn (\Livewire\Features\SupportFileUploads\TemporaryUploadedFile $file) => \App\Support\PhotoUpload::save($file, 'products'))
                                     ->multiple()
                                     ->reorderable()
                                     ->appendFiles()
                                     ->openable()
                                     ->downloadable()
-                                    ->helperText('Choose photos from your library or camera. JPG, PNG and WebP are recommended, up to 10 MB each. On iPhone, use Camera > Formats > Most Compatible if a HEIC photo cannot upload. Wait for uploads to finish before saving.')
+                                    ->helperText('Choose up to 8 photos from your library or camera, up to 10 MB each. iPhone HEIC photos are converted to JPG when saved. The first photo is your cover. Wait for uploads to finish, then save.')
                                     ->panelLayout('grid')
                                     ->maxFiles(8)
                                     // Phone camera photos are shrunk in the browser before upload.
