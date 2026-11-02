@@ -10,6 +10,8 @@
 <script src="/pwa.js" defer data-navigate-once></script>
 <style>
     @media (max-width: 1023px) {
+        .fi-input, .fi-input-wrp input, .fi-input-wrp textarea, .fi-input-wrp select { font-size: 16px !important; }
+        .fi-ta-record-actions button, .fi-ta-record-actions a { min-height: 44px; }
         /* Leave space for the tab bar so the last rows and save buttons aren't hidden. */
         body.fi-body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
         .fi-sc-actions.fi-sticky, .fi-form-actions.fi-sticky { bottom: calc(68px + env(safe-area-inset-bottom)) !important; }

@@ -32,7 +32,7 @@ class ProductsTable
                         ->label('')
                         ->disk('public')
                         ->limit(1)
-                        ->imageHeight(64)
+                        ->imageHeight(96)
                         ->grow(false),
 
                     Stack::make([
@@ -50,6 +50,11 @@ class ProductsTable
                             ->color('gray')
                             ->size('xs')
                             ->formatStateUsing(fn (string $state, Product $record) => $state.($record->sku ? ' · '.$record->sku : '')),
+                        TextColumn::make('is_active')
+                            ->label('Website visibility')
+                            ->badge()
+                            ->formatStateUsing(fn ($state) => $state ? 'Visible on website' : 'Hidden from website')
+                            ->color(fn ($state) => $state ? 'success' : 'gray'),
                         // Stock sits under the name so the name gets the full width on phones.
                         TextInputColumn::make('stock')
                             ->type('number')
@@ -78,7 +83,7 @@ class ProductsTable
                     ->query(fn (Builder $query) => $query->whereNotNull('sale_price')),
             ])
             ->recordActions([
-                EditAction::make()->iconButton(),
+                EditAction::make()->label('Edit product')->button(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

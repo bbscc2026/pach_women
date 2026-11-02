@@ -55,7 +55,7 @@ class ProductForm
                             ]),
 
                         Section::make('Images')
-                            ->description('The first image is the main photo. Drag to reorder. Portrait 3:4 photos look best.')
+                            ->description('Add up to 8 photos. The first photo is the cover shown in the shop. Drag photos to change their order, then save the product.')
                             ->schema([
                                 FileUpload::make('images')
                                     ->hiddenLabel()
@@ -63,6 +63,9 @@ class ProductForm
                                     ->multiple()
                                     ->reorderable()
                                     ->appendFiles()
+                                    ->openable()
+                                    ->downloadable()
+                                    ->helperText('Choose photos from your library or camera. JPG, PNG and WebP are recommended, up to 10 MB each. On iPhone, use Camera > Formats > Most Compatible if a HEIC photo cannot upload. Wait for uploads to finish before saving.')
                                     ->panelLayout('grid')
                                     ->maxFiles(8)
                                     // Phone camera photos are shrunk in the browser before upload.

@@ -10,7 +10,7 @@
     window.__pachPwa = true;
 
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const autoInstallBanner = document.querySelector('meta[name="pwa-install-banner"]')?.content === 'auto';
     const isSmallScreen = window.matchMedia('(max-width: 1023px)').matches;
 
@@ -22,7 +22,8 @@
             font:500 14px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25);
             bottom:calc(env(safe-area-inset-bottom) + 84px);animation:pw-in .25s ease-out}
         @media (min-width:1024px){.pw-toast{bottom:24px}}
-        .pw-toast>span{white-space:nowrap}
+        .pw-toast>span{white-space:normal;min-width:0;overflow-wrap:anywhere}
+        .pw-toast button{flex-shrink:0;min-height:44px}
         .pw-toast button{border:0;border-radius:9999px;padding:8px 14px;font:600 13px/1 inherit;cursor:pointer}
         .pw-primary{background:#fff;color:#141414}
         .pw-ghost{background:transparent;color:#fff;opacity:.7;padding:8px!important}
@@ -105,8 +106,10 @@
                 });
 
                 // Check for a new version when the app comes back to the foreground, and every 30 minutes.
-                document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && registration.update());
-                setInterval(() => registration.update(), 30 * 60 * 1000);
+                const checkUpdate = () => navigator.onLine && registration.update().catch(() => {});
+                document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && checkUpdate());
+                window.addEventListener('online', checkUpdate);
+                setInterval(checkUpdate, 30 * 60 * 1000);
             }).catch(() => {});
         });
     }

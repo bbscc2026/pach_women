@@ -2,13 +2,13 @@
 /* PACH WOMEN service worker — version {{ $version }} */
 const VERSION = @json($version);
 const STATIC_CACHE = 'pw-static-' + VERSION;
-const PAGE_CACHE = 'pw-pages-v1';
+const PAGE_CACHE = 'pw-pages-v2';
 const IMAGE_CACHE = 'pw-images-v1';
 const PRECACHE = @json($precache);
 const OFFLINE_URL = '/offline';
 
 // Pages that must never be served from the offline copy.
-const NEVER_CACHE = [/^\/checkout/, /^\/payment\//, /^\/reset-password\//, /^\/order\/.+\/thank-you/, /^\/logout/, /^\/admin\/logout/, /^\/sw\.js/];
+const NEVER_CACHE = [/^\/admin(?:\/|$)/, /^\/account(?:\/|$)/, /^\/me(?:\/|$)/, /^\/cart(?:\/|$)/, /^\/login/, /^\/register/, /^\/forgot-password/, /^\/checkout/, /^\/payment\//, /^\/reset-password\//, /^\/order\/.+\/thank-you/, /^\/logout/, /^\/sw\.js/];
 
 self.addEventListener('install', (event) => {
     // Don't take over straight away: the page shows "Update" and the user decides.
@@ -20,6 +20,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
     event.waitUntil((async () => {
         const keys = await caches.keys();
+        await caches.delete('pw-pages-v1');
         await Promise.all(keys.filter((k) => k.startsWith('pw-static-') && k !== STATIC_CACHE).map((k) => caches.delete(k)));
         await self.clients.claim();
     })());
@@ -65,7 +66,7 @@ async function networkFirst(request, cacheable) {
         }
         return response;
     } catch (error) {
-        const cached = await caches.match(request, { ignoreVary: true });
+        const cached = cacheable ? await (await caches.open(PAGE_CACHE)).match(request) : null;
         if (cached) return cached;
         return (await caches.match(OFFLINE_URL)) || new Response('You are offline.', { status: 503, headers: { 'Content-Type': 'text/plain' } });
     }
