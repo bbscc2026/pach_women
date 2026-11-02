@@ -69,7 +69,9 @@ class OrderActions
             ->requiresConfirmation()
             ->modalHeading(fn (Order $record) => 'Cancel order '.$record->number.'?')
             ->modalDescription(fn (Order $record) => $record->payment_status === 'paid'
-                ? 'Stock goes back. This order was paid online — refund it from the Razorpay dashboard.'
+                ? ($record->payment_method === 'razorpay'
+                    ? 'Stock goes back. Refund this payment from the Razorpay dashboard.'
+                    : 'Stock goes back. This payment was recorded as received. Arrange the refund using the original payment method; cancelling does not refund money automatically.')
                 : 'Stock goes back to the products.')
             ->action(function (Order $record) {
                 $record->update(['status' => 'cancelled']);

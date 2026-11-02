@@ -52,7 +52,7 @@ class OrderForm
                             ->schema([
                                 TextInput::make('name')->required(),
                                 TextInput::make('phone')->tel()->required(),
-                                TextInput::make('email')->email()->required()->columnSpanFull(),
+                                TextInput::make('email')->email()->dehydrateStateUsing(fn ($state) => $state ?? '')->columnSpanFull(),
                                 TextInput::make('line1')->label('Address line 1')->required()->columnSpanFull(),
                                 TextInput::make('line2')->label('Address line 2')->columnSpanFull(),
                                 TextInput::make('city')->required(),

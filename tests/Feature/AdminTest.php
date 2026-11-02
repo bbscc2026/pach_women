@@ -196,4 +196,30 @@ class AdminTest extends TestCase
         $order->update(['status' => 'cancelled']);
         $this->assertSame(3, $product->fresh()->stock);
     }
+
+    public function test_social_orders_ship_track_and_deliver_with_correct_payments(): void
+    {
+        $admin = $this->admin();
+        $customer = User::factory()->create();
+        $category = Category::create(['name' => 'Social', 'slug' => 'social', 'is_active' => true]);
+        $product = $category->products()->create(['name' => 'Social item', 'slug' => 'social-item', 'price' => 500, 'stock' => 20, 'sizes' => ['M'], 'is_active' => true]);
+        foreach (['whatsapp', 'instagram'] as $source) {
+            foreach (['cod', 'cash', 'upi', 'bank'] as $method) {
+                $data = ['source' => $source, 'payment_method' => $method, 'shipping' => 40, 'user_id' => $customer->id, 'name' => 'Social customer', 'phone' => '9876543210', 'email' => '', 'line1' => 'Test delivery', 'city' => 'Kozhikode', 'state' => 'Kerala', 'pincode' => '673001', 'lines' => [['product_id' => $product->id, 'size' => 'M', 'quantity' => 1]]];
+                Livewire::actingAs($admin)->test(CreateOrder::class)->fillForm($data)->call('create')->assertHasNoFormErrors();
+                $order = Order::latest('id')->firstOrFail();
+                $this->assertSame('540.00', $order->total);
+                $this->assertSame($method === 'cod' ? 'pending' : 'paid', $order->payment_status);
+                Livewire::actingAs($admin)->test(EditOrder::class, ['record' => $order->number])->fillForm(['email' => ''])->call('save')->assertHasNoFormErrors();
+                Livewire::actingAs($admin)->test(EditOrder::class, ['record' => $order->number])->callAction('ship', data: ['tracking_number' => 'TEST-'.$order->number])->assertHasNoActionErrors();
+                $this->assertSame('shipped', $order->fresh()->status);
+                $this->actingAs($customer)->get('/account/orders/'.$order->number)->assertOk()->assertSee('TEST-'.$order->number);
+                $this->actingAs(User::factory()->create())->get('/account/orders/'.$order->number)->assertNotFound();
+                Livewire::actingAs($admin)->test(EditOrder::class, ['record' => $order->number])->callAction('deliver')->assertHasNoActionErrors();
+                $this->assertSame('delivered', $order->fresh()->status);
+                $this->assertSame('paid', $order->fresh()->payment_status);
+            }
+        }
+        $this->assertSame(12, $product->fresh()->stock);
+    }
 }
