@@ -3,7 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "vite build && npm run build:admin",
+        "build:admin": "vite build --config vite.admin.config.js",
         "dev": "vite"
     },
     "devDependencies": {

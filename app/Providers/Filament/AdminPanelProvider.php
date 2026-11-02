@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\ClearSiteDataOnLogout;
+use Filafly\Themes\Brisk\BriskTheme;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -31,6 +32,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->profile()
+            ->viteTheme('resources/css/filament/admin/theme.css', 'admin-build')
+            ->plugin(BriskTheme::make())
             // Faster page changes, which helps most on phones.
             ->spa()
             ->sidebarCollapsibleOnDesktop()
