@@ -9,6 +9,7 @@ use Filament\Actions\EditAction;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -19,25 +20,34 @@ class CategoriesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->extraAttributes(['class' => 'pw-categories-table'])
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->columns([
                 Split::make([
                     ImageColumn::make('image')
                         ->disk('public')
-                        ->circular(),
-                    TextColumn::make('name')
-                        ->searchable()
-                        ->sortable(),
-                    TextColumn::make('products_count')
-                        ->counts('products')
-                        ->label('Products'),
+                        ->imageHeight(64)
+                        ->grow(false),
+                    Stack::make([
+                        TextColumn::make('name')
+                            ->searchable()
+                            ->sortable()
+                            ->wrap(),
+                        TextColumn::make('products_count')
+                            ->counts('products')
+                            ->label('Products')
+                            ->color('gray')
+                            ->size('sm')
+                            ->formatStateUsing(fn ($state) => $state.' products'),
+                    ])->space(1),
                     ToggleColumn::make('is_active')
-                        ->label('Visible'),
-                ])->from('md'),
+                        ->label('Visible')
+                        ->grow(false),
+                ])->extraAttributes(['class' => 'pw-category-row']),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->label('Edit')->button(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

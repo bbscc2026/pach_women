@@ -33,7 +33,21 @@
     .pw-products-table .fi-ta-record { position: relative; }
     .pw-products-table .fi-ta-record-content-ctn { padding-block: 0 !important; }
     .pw-products-table .fi-input-wrp { border-radius: 8px !important; }
+    .pw-categories-table .pw-category-row { align-items: center; gap: 20px; }
+    .pw-categories-table .fi-ta-record { position: relative; }
+    .pw-categories-table .fi-ta-record-content-ctn { padding-block: 0 !important; }
+    .pw-categories-table .fi-ta-image img { width: 48px; height: 64px; object-fit: cover; border-radius: 8px; }
     @media (max-width: 1023px) {
+        .fi-resource-categories .fi-header { flex-direction: row !important; align-items: center !important; justify-content: space-between; }
+        .pw-categories-table .fi-ta-record { padding: 14px 12px !important; }
+        .pw-categories-table .fi-ta-record-content-ctn { display: block; width: 100%; padding: 0 !important; }
+        .pw-categories-table .pw-category-row { display: grid !important; grid-template-columns: 64px minmax(0, 1fr); align-items: center !important; gap: 8px 12px !important; }
+        .pw-categories-table .pw-category-row > .fi-ta-col:first-child { grid-row: 1 / 3; }
+        .pw-categories-table .pw-category-row > :not(:first-child) { grid-column: 2; }
+        .pw-categories-table .fi-ta-image img { width: 64px !important; height: 86px !important; }
+        .pw-categories-table .pw-category-row > .fi-ta-col:last-child { min-height: 40px; display: flex; align-items: center; padding-right: 90px; }
+        .pw-categories-table .fi-ta-record-content-ctn > .fi-ta-actions { position: absolute; right: 12px; bottom: 14px; margin: 0; }
+        .pw-categories-table .fi-ta-actions .fi-btn { min-height: 40px; padding-inline: 12px; border-radius: 8px; }
         .fi-resource-products .fi-header { flex-direction: row !important; align-items: center !important; justify-content: space-between; }
         .pw-products-table .fi-ta-header-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
         .pw-products-table .pw-select-toggle { margin: 0; padding: 8px 10px; font-size: 12px; }
