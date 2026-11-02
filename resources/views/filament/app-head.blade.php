@@ -28,6 +28,10 @@
     .fi-sidebar-item-button { padding-block: 9px !important; }
     .fi-section, .fi-ta-ctn { border-radius: 12px !important; }
     @media (max-width: 1023px) {
+        .fi-wi-stats-overview .fi-section-content-ctn { min-width: 0; }
+        .fi-wi-stats-overview-stat { min-width: 0; padding: 14px !important; }
+        .fi-wi-stats-overview-stat-label { font-size: 12px !important; overflow-wrap: anywhere; }
+        .fi-wi-stats-overview-stat-value { font-size: 25px !important; line-height: 1.2; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
         .pw-select-toggle { display: inline-flex; align-items: center; }
         .fi-ta-record { position: relative; padding: 10px 12px !important; }
         .fi-ta-record-content-ctn, .fi-ta-record-content, .fi-ta-col, .fi-ta-text { min-width: 0; }

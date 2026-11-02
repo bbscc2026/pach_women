@@ -8,7 +8,7 @@
     $productsActive = request()->routeIs('filament.admin.resources.products.*') && ! request()->routeIs('filament.admin.resources.products.create');
     $tabs = [
         ['Home', 'home', url('/admin'), request()->routeIs('filament.admin.pages.dashboard'), null],
-        ['Orders', 'clipboard-document-list', OrderResource::getUrl(), request()->routeIs('filament.admin.resources.orders.*'), $toShip],
+        ['Orders', 'clipboard-document-list', OrderResource::getUrl(), request()->routeIs('filament.admin.resources.orders.*') && ! request()->routeIs('filament.admin.resources.orders.create'), $toShip],
     ];
 @endphp
 
@@ -23,9 +23,9 @@
         </a>
     @endforeach
 
-    <a href="{{ ProductResource::getUrl('create') }}" wire:navigate class="pw-tab pw-tab-add" aria-label="New product">
+    <a href="{{ OrderResource::getUrl('create') }}" wire:navigate @class(['pw-tab', 'pw-tab-add', 'is-active' => request()->routeIs('filament.admin.resources.orders.create')]) aria-label="Create order">
         <span class="pw-plus"><x-filament::icon icon="heroicon-o-plus" /></span>
-        New
+        New order
     </a>
 
     <a href="{{ ProductResource::getUrl() }}" wire:navigate @class(['pw-tab', 'is-active' => $productsActive])>

@@ -57,7 +57,7 @@ class PwaTest extends TestCase
             ->assertSee('/admin.webmanifest', false)
             ->assertSee('pwa-install-banner', false)
             ->assertSee('pw-tabbar', false)
-            ->assertSee('New product', false);
+            ->assertSee('Create order', false);
     }
 
     public function test_me_tab_works_for_guests_and_customers(): void

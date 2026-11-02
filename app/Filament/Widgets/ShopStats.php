@@ -13,6 +13,11 @@ class ShopStats extends StatsOverviewWidget
 
     protected static bool $isLazy = false;
 
+    protected function getColumns(): int|array|null
+    {
+        return ['default' => 2, '@xl' => 4];
+    }
+
     protected function getStats(): array
     {
         // Revenue counts confirmed-or-later orders that were not cancelled.
@@ -24,7 +29,7 @@ class ShopStats extends StatsOverviewWidget
             Stat::make('Waiting to ship', Order::where('status', 'confirmed')->count())
                 ->color('warning'),
             Stat::make('Low stock', Product::active()->where('stock', '<=', 2)->count())
-                ->description('Visible products with 2 or fewer left')
+                ->description('2 or fewer left')
                 ->color('danger'),
         ];
     }
