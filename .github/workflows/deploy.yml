@@ -1,0 +1,34 @@
+name: Deploy PACH WOMEN
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pachwomen-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy through verified SSH
+        env:
+          DEPLOY_KEY: ${{ secrets.PACHWOMEN_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.PACHWOMEN_KNOWN_HOSTS }}
+          DEPLOY_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_KEY"
+          test -n "$KNOWN_HOSTS"
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/pachwomen
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/pachwomen ~/.ssh/known_hosts
+          ssh -i ~/.ssh/pachwomen -p 65002 -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=20 u710748228@62.72.28.54 "DEPLOY_COMMIT=$DEPLOY_COMMIT bash /home/u710748228/domains/pachwomen.com/app/deploy.sh"
+      - name: Verify public routes
+        run: |
+          for path in / /shop /admin/login /up; do
+            curl --fail --silent --show-error --retry 3 --max-time 30 "https://pachwomen.com$path" >/dev/null
+          done
