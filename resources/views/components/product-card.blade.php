@@ -37,7 +37,7 @@
     </div>
 
     <div class="mt-2.5 sm:mt-3">
-        <h3 class="line-clamp-2 font-sans text-[12px] leading-snug text-neutral-800 group-hover:underline group-hover:underline-offset-4 sm:text-sm">{{ $product->name }}</h3>
+        <h3 class="line-clamp-2 font-sans text-[11.5px] leading-snug text-neutral-800 group-hover:underline group-hover:underline-offset-4 sm:text-sm">{{ $product->name }}</h3>
         <p class="mt-1 flex flex-wrap items-baseline gap-x-2 text-sm">
             <span class="font-medium {{ $product->onSale() ? 'text-sale' : '' }}">{{ inr($product->finalPrice()) }}</span>
             @if ($product->onSale())

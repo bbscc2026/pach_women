@@ -47,7 +47,7 @@
 
     @media (max-width: 639px) {
         html {
-            font-size: 14px;
+            font-size: 13px;
         }
     }
 
@@ -237,9 +237,9 @@
     min-height: 42px;
 
     @media (max-width: 639px) {
-        min-height: 40px;
-        padding: 8px 14px;
-        font-size: 11px;
+        min-height: 38px;
+        padding: 7px 12px;
+        font-size: 10.5px;
     }
 }
 
