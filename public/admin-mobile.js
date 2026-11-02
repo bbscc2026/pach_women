@@ -22,7 +22,7 @@
         if (start && Math.hypot(event.clientX-start[0], event.clientY-start[1]) > 10) cancel();
     });
     document.addEventListener('pointerup', cancel);
-    document.addEventListener('pointercancel', cancel);
+    document.addEventListener('pointercancel', () => { cancel(); held = false; start = null; });
     document.addEventListener('click', event => {
         if (!phone() || event.target.closest('input,button,select,textarea,.fi-ta-record-actions')) return;
         const row = rowFor(event.target);

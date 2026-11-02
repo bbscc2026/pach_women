@@ -10,6 +10,8 @@ test "$(pwd -P)" = /home/u710748228/domains/pachwomen.com/app
 test -f .env
 test -f public/index.php
 test -L public/storage
+test "$(readlink -f public/storage)" = "$(pwd -P)/storage/app/public"
+environment_before=$(sha256sum .env)
 exec 9>storage/framework/deploy.lock
 flock -n 9 || { echo 'Another deployment is running'; exit 1; }
 git diff --quiet
@@ -19,9 +21,13 @@ test "$(git rev-parse origin/main)" = "${DEPLOY_COMMIT:-$(git rev-parse origin/m
 previous=$(git rev-parse HEAD)
 recover() {
     status=$?
+    trap - EXIT
     if [ "$status" -ne 0 ]; then
         echo "Deployment failed; restoring code $previous"
-        git restore --source="$previous" --worktree -- .
+        failed=$(git rev-parse HEAD)
+        git restore --source="$previous" --staged --worktree -- .
+        git update-ref -m 'Restore failed deployment' HEAD "$previous" "$failed"
+        $PHP "$(command -v composer)" install --no-dev --optimize-autoloader --no-interaction || true
         $PHP artisan optimize:clear || true
     fi
     $PHP artisan up || true
@@ -35,6 +41,8 @@ $PHP "$(command -v composer)" install --no-dev --optimize-autoloader --no-intera
 $PHP artisan migrate --force
 $PHP artisan optimize
 $PHP artisan icons:cache
+test "$(sha256sum .env)" = "$environment_before"
+test "$(readlink -f public/storage)" = "$(pwd -P)/storage/app/public"
 $PHP artisan up
 curl --fail --silent --show-error --max-time 30 https://pachwomen.com/up >/dev/null
 

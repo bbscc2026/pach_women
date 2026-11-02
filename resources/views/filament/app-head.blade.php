@@ -11,6 +11,7 @@
 <script src="/admin-mobile.js" defer data-navigate-once></script>
 <style>
     /* Compact workspace: reduce empty space without shrinking touch controls. */
+    .pw-select-toggle { display: none; }
     .fi-main { max-width: none !important; padding-inline: 20px !important; }
     .fi-page { padding-block: 20px !important; row-gap: 16px !important; }
     .fi-page-header-main-ctn, .fi-page-content { gap: 16px !important; }
@@ -27,6 +28,7 @@
     .fi-sidebar-item-button { padding-block: 9px !important; }
     .fi-section, .fi-ta-ctn { border-radius: 12px !important; }
     @media (max-width: 1023px) {
+        .pw-select-toggle { display: inline-flex; align-items: center; }
         .fi-ta-record { position: relative; padding: 10px 12px !important; }
         .fi-ta-record-content-ctn, .fi-ta-record-content, .fi-ta-col, .fi-ta-text { min-width: 0; }
         .fi-ta-text { overflow-wrap: anywhere; white-space: normal !important; }
