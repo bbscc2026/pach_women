@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -18,14 +19,16 @@ class BannersTable
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->columns([
-                ImageColumn::make('image')
-                    ->disk('public')
-                    ->imageHeight(56),
-                TextColumn::make('title')
-                    ->description(fn ($record) => $record->subtitle)
-                    ->searchable(),
-                ToggleColumn::make('is_active')
-                    ->label('Visible'),
+                Split::make([
+                    ImageColumn::make('image')
+                        ->disk('public')
+                        ->imageHeight(56),
+                    TextColumn::make('title')
+                        ->description(fn ($record) => $record->subtitle)
+                        ->searchable(),
+                    ToggleColumn::make('is_active')
+                        ->label('Visible'),
+                ])->from('md'),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -8,6 +8,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -20,15 +21,17 @@ class ContentPagesTable
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->columns([
-                TextColumn::make('title')
-                    ->searchable()
-                    ->description(fn (ContentPage $record) => '/pages/'.$record->slug),
-                TextColumn::make('updated_at')
-                    ->label('Last edited')
-                    ->since()
-                    ->sortable(),
-                ToggleColumn::make('is_active')
-                    ->label('Visible'),
+                Split::make([
+                    TextColumn::make('title')
+                        ->searchable()
+                        ->description(fn (ContentPage $record) => '/pages/'.$record->slug),
+                    TextColumn::make('updated_at')
+                        ->label('Last edited')
+                        ->since()
+                        ->sortable(),
+                    ToggleColumn::make('is_active')
+                        ->label('Visible'),
+                ])->from('md'),
             ])
             ->recordActions([
                 Action::make('view')

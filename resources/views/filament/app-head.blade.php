@@ -8,6 +8,7 @@
 <meta name="pwa-install-banner" content="auto">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script src="/pwa.js" defer data-navigate-once></script>
+<script src="/admin-mobile.js" defer data-navigate-once></script>
 <style>
     /* Compact workspace: reduce empty space without shrinking touch controls. */
     .fi-main { max-width: none !important; padding-inline: 20px !important; }
@@ -26,6 +27,15 @@
     .fi-sidebar-item-button { padding-block: 9px !important; }
     .fi-section, .fi-ta-ctn { border-radius: 12px !important; }
     @media (max-width: 1023px) {
+        .fi-ta-record { position: relative; padding: 10px 12px !important; }
+        .fi-ta-record-content-ctn, .fi-ta-record-content, .fi-ta-col, .fi-ta-text { min-width: 0; }
+        .fi-ta-text { overflow-wrap: anywhere; white-space: normal !important; }
+        .fi-ta-record-with-content-prefix { padding-inline-start: 12px !important; }
+        .fi-ta-record-checkbox, .fi-ta-page-checkbox { position: absolute !important; width: 1px !important; height: 1px !important; opacity: 0; }
+        .fi-ta-record:has(.fi-ta-record-checkbox:checked) { background: rgb(59 130 246 / .12); box-shadow: inset 3px 0 #3b82f6; }
+        .fi-ta-record-content { padding: 0 !important; }
+        .fi-ta-record-actions { padding-top: 6px !important; }
+        .pw-select-toggle { margin: 8px 12px; min-height: 44px; padding: 8px 12px; border: 1px solid #71717a; border-radius: 8px; font: inherit; }
         .fi-main { padding-inline: 12px !important; }
         .fi-page { padding-block: 14px !important; }
         .fi-header-heading { font-size: 22px !important; }
