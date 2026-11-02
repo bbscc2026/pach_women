@@ -12,7 +12,6 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -33,7 +32,7 @@ class ProductsTable
                         ->label('')
                         ->disk('public')
                         ->limit(1)
-                        ->imageHeight(72)
+                        ->imageHeight(64)
                         ->grow(false),
 
                     Stack::make([
@@ -42,34 +41,33 @@ class ProductsTable
                             ->sortable()
                             ->weight(FontWeight::Medium)
                             ->wrap(),
+                        TextColumn::make('category.name')
+                            ->color('gray')
+                            ->size('xs')
+                            ->formatStateUsing(fn (string $state, Product $record) => $state.($record->sku ? ' · '.$record->sku : '')),
+                    ])->space(1)->extraAttributes(['class' => 'pw-product-identity']),
+
+                    Stack::make([
                         TextColumn::make('price')
                             ->label('Price')
                             ->sortable()
                             ->formatStateUsing(fn (Product $record) => inr($record->finalPrice()).($record->onSale() ? '  (MRP '.inr($record->price).')' : ''))
                             ->color(fn (Product $record) => $record->onSale() ? 'danger' : null),
-                        TextColumn::make('category.name')
-                            ->color('gray')
-                            ->size('xs')
-                            ->formatStateUsing(fn (string $state, Product $record) => $state.($record->sku ? ' · '.$record->sku : '')),
                         TextColumn::make('is_active')
                             ->label('Website visibility')
                             ->badge()
                             ->formatStateUsing(fn ($state) => $state ? 'Visible' : 'Hidden')
                             ->color(fn ($state) => $state ? 'success' : 'gray'),
-                        // Stock sits under the name so the name gets the full width on phones.
-                        TextInputColumn::make('stock')
-                            ->type('number')
-                            ->rules(['required', 'integer', 'min:0'])
-                            ->sortable()
-                            ->prefix('Stock')
-                            ->extraAttributes(['style' => 'max-width: 9rem']),
-                    ])->space(1),
+                    ])->space(1)->grow(false)->extraAttributes(['class' => 'pw-product-price']),
 
-                    ToggleColumn::make('is_active')
-                        ->label('Visible')
+                    TextInputColumn::make('stock')
+                        ->type('number')
+                        ->rules(['required', 'integer', 'min:0'])
+                        ->sortable()
+                        ->prefix('Stock')
                         ->grow(false)
-                        ->visibleFrom('sm'),
-                ]),
+                        ->extraAttributes(['class' => 'pw-product-stock', 'style' => 'max-width: 8rem']),
+                ])->extraAttributes(['class' => 'pw-product-row']),
             ])
             ->filters([
                 SelectFilter::make('category')
