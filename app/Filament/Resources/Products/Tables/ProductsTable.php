@@ -32,7 +32,7 @@ class ProductsTable
                         ->label('')
                         ->disk('public')
                         ->limit(1)
-                        ->imageHeight(96)
+                        ->imageHeight(72)
                         ->grow(false),
 
                     Stack::make([
@@ -62,7 +62,7 @@ class ProductsTable
                             ->sortable()
                             ->prefix('Stock')
                             ->extraAttributes(['style' => 'max-width: 9rem']),
-                    ])->space(2),
+                    ])->space(1),
 
                     ToggleColumn::make('is_active')
                         ->label('Visible')

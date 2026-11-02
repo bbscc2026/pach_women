@@ -9,7 +9,28 @@
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script src="/pwa.js" defer data-navigate-once></script>
 <style>
+    /* Compact workspace: reduce empty space without shrinking touch controls. */
+    .fi-main { max-width: none !important; padding-inline: 20px !important; }
+    .fi-page { padding-block: 20px !important; row-gap: 16px !important; }
+    .fi-page-header-main-ctn, .fi-page-content { gap: 16px !important; }
+    .fi-header { gap: 12px !important; }
+    .fi-header-heading { font-size: 24px !important; line-height: 1.25 !important; }
+    .fi-section-header { padding: 14px 16px !important; }
+    .fi-section-content { padding: 16px !important; }
+    .fi-ta-header, .fi-ta-header-toolbar { padding: 12px 16px !important; }
+    .fi-ta-record { padding-block: 12px !important; }
+    .fi-ta-record-content { gap: 12px !important; }
+    .fi-ta-record-actions { gap: 8px !important; }
+    .fi-wi-stats-overview-stat { padding: 16px !important; }
+    .fi-sidebar-nav { padding: 12px !important; gap: 16px !important; }
+    .fi-sidebar-item-button { padding-block: 9px !important; }
+    .fi-section, .fi-ta-ctn { border-radius: 12px !important; }
     @media (max-width: 1023px) {
+        .fi-main { padding-inline: 12px !important; }
+        .fi-page { padding-block: 14px !important; }
+        .fi-header-heading { font-size: 22px !important; }
+        .fi-section-content { padding: 12px !important; }
+        .fi-ta-header, .fi-ta-header-toolbar { padding: 10px 12px !important; }
         .fi-input, .fi-input-wrp input, .fi-input-wrp textarea, .fi-input-wrp select { font-size: 16px !important; }
         .fi-ta-record-actions button, .fi-ta-record-actions a { min-height: 44px; }
         /* Leave space for the tab bar so the last rows and save buttons aren't hidden. */
@@ -22,7 +43,7 @@
     .dark .pw-tabbar { background: rgba(24,24,27,.96); border-top-color: rgb(255 255 255 / .08); }
     @media (min-width: 1024px) { .pw-tabbar { display: none; } }
     .pw-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-        font: 500 10px/1 inherit; letter-spacing: .04em; text-transform: uppercase; color: rgb(113 113 122); text-decoration: none;
+        font-family: inherit; font-weight: 500; font-size: 10px; line-height: 1; letter-spacing: .02em; color: rgb(113 113 122); text-decoration: none;
         background: none; border: 0; cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent; }
     .pw-tab svg { width: 24px; height: 24px; }
     .pw-tab.is-active { color: rgb(24 24 27); }
