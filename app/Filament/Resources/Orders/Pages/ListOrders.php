@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Orders\Pages;
 use App\Filament\Resources\Orders\OrderResource;
 use App\Models\Order;
 use Closure;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +17,7 @@ class ListOrders extends ListRecords
     // Orders are created by customers on the website, so there is no "New order" button.
     protected function getHeaderActions(): array
     {
-        return [];
+        return [CreateAction::make()->label('Create order / POS')];
     }
 
     /**

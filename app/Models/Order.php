@@ -33,6 +33,9 @@ class Order extends Model
 
     public const PAYMENT_METHODS = [
         'cod' => 'Cash on Delivery',
+        'cash' => 'Cash collected',
+        'upi' => 'UPI received',
+        'bank' => 'Bank transfer received',
         'razorpay' => 'Pay Online (UPI / Card / Netbanking)',
     ];
 

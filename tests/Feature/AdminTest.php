@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Resources\Orders\Pages\CreateOrder;
 use App\Filament\Resources\Orders\Pages\EditOrder;
 use App\Filament\Resources\Orders\Pages\ListOrders;
 use App\Filament\Resources\Products\Pages\CreateProduct;
@@ -176,5 +177,23 @@ class AdminTest extends TestCase
             ->assertHasNoFormErrors();
         Storage::disk('public')->assertMissing($original[0]);
         Storage::disk('public')->assertExists($original[1]);
+    }
+
+    public function test_manual_order_calculates_totals_reserves_stock_and_rejects_overselling(): void
+    {
+        $category = Category::create(['name' => 'Manual', 'slug' => 'manual', 'is_active' => true]);
+        $product = $category->products()->create(['name' => 'Test item', 'slug' => 'test-item', 'price' => 500, 'sale_price' => 400, 'stock' => 3, 'sizes' => ['M'], 'is_active' => true]);
+        $data = ['source' => 'whatsapp', 'payment_method' => 'cash', 'shipping' => 50, 'name' => 'Test customer', 'phone' => '9876543210', 'email' => '', 'line1' => 'Store pickup', 'city' => 'Kozhikode', 'state' => 'Kerala', 'pincode' => '673001', 'lines' => [['product_id' => $product->id, 'size' => 'M', 'quantity' => 2]]];
+        Livewire::actingAs($this->admin())->test(CreateOrder::class)->fillForm($data)->call('create')->assertHasNoFormErrors();
+        $order = Order::latest('id')->firstOrFail();
+        $this->assertSame('850.00', $order->total);
+        $this->assertSame('paid', $order->payment_status);
+        $this->assertSame(1, $product->fresh()->stock);
+        $this->assertStringContainsString('whatsapp', $order->notes);
+        Livewire::actingAs($this->admin())->test(CreateOrder::class)->fillForm($data)->call('create')->assertHasFormErrors(['lines.0.quantity']);
+        $this->assertSame(1, Order::count());
+        $this->assertSame(1, $product->fresh()->stock);
+        $order->update(['status' => 'cancelled']);
+        $this->assertSame(3, $product->fresh()->stock);
     }
 }

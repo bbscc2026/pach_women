@@ -60,7 +60,7 @@ class OrdersTable
                             ->weight(FontWeight::SemiBold)
                             ->sortable()
                             ->alignment(Alignment::End)
-                            ->description(fn (Order $record) => $record->payment_method === 'cod' ? 'COD' : ($record->payment_status === 'paid' ? 'Paid online' : 'Online · unpaid')),
+                            ->description(fn (Order $record) => $record->paymentMethodLabel().' · '.$record->paymentLabel()),
                         TextColumn::make('status')
                             ->badge()
                             ->formatStateUsing(fn (string $state, Order $record) => $record->statusLabel())
