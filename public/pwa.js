@@ -12,6 +12,7 @@
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
     const autoInstallBanner = document.querySelector('meta[name="pwa-install-banner"]')?.content === 'auto';
+    const isSmallScreen = window.matchMedia('(max-width: 1023px)').matches;
 
     // ---------- Styles (scoped by the pw- prefix, work on both shop and admin) ----------
     const style = document.createElement('style');
@@ -129,7 +130,10 @@
 
         let dismissed = false;
         try { dismissed = localStorage.getItem('pw-install-dismissed') === '1'; } catch (e) {}
-        if (autoInstallBanner && !dismissed) {
+        // Keep the automatic prompt out of desktop admin screens where it can
+        // obscure dashboard content. The explicit install controls remain
+        // available on every supported screen size.
+        if (autoInstallBanner && isSmallScreen && !dismissed) {
             toast('Install the admin app on this phone', window.pachInstall, 'Install', () => {
                 try { localStorage.setItem('pw-install-dismissed', '1'); } catch (e) {}
             });
