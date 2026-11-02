@@ -31,6 +31,7 @@
     .pw-products-table .pw-product-price { width: 180px; }
     .pw-products-table .fi-ta-image img { width: 48px; height: 64px; object-fit: cover; border-radius: 8px; }
     .pw-products-table .fi-ta-record { position: relative; }
+    .pw-products-table .fi-ta-record-content-ctn { padding-block: 0 !important; }
     .pw-products-table .fi-input-wrp { border-radius: 8px !important; }
     @media (max-width: 1023px) {
         .fi-resource-products .fi-header { flex-direction: row !important; align-items: center !important; justify-content: space-between; }
