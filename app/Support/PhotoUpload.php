@@ -15,8 +15,9 @@ class PhotoUpload
             return $file->store($directory, 'public');
         }
 
-        $image = new \Imagick;
+        $image = null;
         try {
+            $image = new \Imagick;
             $image->pingImage($file->getRealPath());
             if ($image->getImageWidth() * $image->getImageHeight() > 50000000) {
                 throw new \RuntimeException('Photo too large');
@@ -28,7 +29,9 @@ class PhotoUpload
             } elseif (method_exists($image, 'autoOrient')) {
                 $image->autoOrient();
             }
-            $image->thumbnailImage(2000, 2000, true, true);
+            if ($image->getImageWidth() > 2000 || $image->getImageHeight() > 2000) {
+                $image->thumbnailImage(2000, 2000, true);
+            }
             $image->setImageFormat('jpeg');
             $image->setImageCompressionQuality(85);
             $image->stripImage();
@@ -36,11 +39,12 @@ class PhotoUpload
             if (! Storage::disk('public')->put($path, $image->getImageBlob())) {
                 throw new \RuntimeException('Storage failed');
             }
+
             return $path;
         } catch (\Throwable $exception) {
             throw ValidationException::withMessages(['data.images' => 'This iPhone photo could not be processed. Please choose a JPG photo or a smaller image.']);
         } finally {
-            $image->clear();
+            $image?->clear();
         }
     }
 }
