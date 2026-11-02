@@ -70,4 +70,14 @@
         border-radius: 9999px; background: #141414; color: #fff; box-shadow: 0 6px 16px rgb(0 0 0 / .25); }
     .dark .pw-tab-add span.pw-plus { background: #fff; color: #141414; }
     .pw-tab-add { color: inherit; }
+    .pw-create-panel { position: fixed; bottom: calc(82px + env(safe-area-inset-bottom)); left: 12px; right: 12px; max-width: 440px; margin-inline: auto; padding: 12px; border: 1px solid #e4e4e7; border-radius: 18px; background: #fff; color: #18181b; box-shadow: 0 12px 45px rgb(0 0 0 / .25); }
+    .dark .pw-create-panel { background: #18181b; color: #fafafa; border-color: #3f3f46; }
+    .pw-create-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-left: 8px; font-size: 14px; }
+    .pw-create-heading button { min-width: 44px; min-height: 44px; border: 0; background: none; color: inherit; cursor: pointer; }
+    .pw-create-panel > a { display: flex; align-items: center; gap: 12px; padding: 14px 10px; border-radius: 10px; text-decoration: none; color: inherit; }
+    .pw-create-panel > a:hover, .pw-create-panel > a:focus-visible { background: rgb(113 113 122 / .15); }
+    .pw-create-panel > a > svg { width: 24px; height: 24px; flex-shrink: 0; }
+    .pw-create-panel > a > span { flex: 1; min-width: 0; }
+    .pw-create-panel strong { display: block; font-size: 14px; }
+    .pw-create-panel small { display: block; font-size: 12px; opacity: .75; margin-top: 3px; }
 </style>
