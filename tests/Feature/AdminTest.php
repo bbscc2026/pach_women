@@ -5,11 +5,14 @@ namespace Tests\Feature;
 use App\Filament\Resources\Orders\Pages\EditOrder;
 use App\Filament\Resources\Orders\Pages\ListOrders;
 use App\Filament\Resources\Products\Pages\CreateProduct;
+use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -133,5 +136,45 @@ class AdminTest extends TestCase
         }
 
         $this->assertSame(2, Product::count());
+    }
+
+    public function test_product_gallery_uploads_are_stored_in_order(): void
+    {
+        Storage::fake('public');
+        $category = Category::create(['name' => 'Test gallery', 'slug' => 'test-gallery']);
+        Livewire::actingAs($this->admin())
+            ->test(CreateProduct::class)
+            ->fillForm([
+                'name' => 'Gallery test', 'slug' => 'gallery-test',
+                'category_id' => $category->id, 'price' => 999, 'stock' => 1,
+                'images' => [
+                    UploadedFile::fake()->image('cover.jpg', 80, 120),
+                    UploadedFile::fake()->image('detail.png', 120, 80),
+                ],
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+        $product = Product::where('slug', 'gallery-test')->firstOrFail();
+        $this->assertCount(2, $product->images);
+        foreach ($product->images as $path) {
+            $this->assertStringStartsWith('products/', $path);
+            Storage::disk('public')->assertExists($path);
+        }
+        $this->assertStringEndsWith('.jpg', $product->images[0]);
+        $this->assertStringEndsWith('.png', $product->images[1]);
+        $original = $product->images;
+        Livewire::actingAs($this->admin())
+            ->test(EditProduct::class, ['record' => $product->getRouteKey()])
+            ->fillForm(['images' => array_reverse($original)])
+            ->call('save')
+            ->assertHasNoFormErrors();
+        $this->assertSame(array_reverse($original), $product->fresh()->images);
+        Livewire::actingAs($this->admin())
+            ->test(EditProduct::class, ['record' => $product->getRouteKey()])
+            ->fillForm(['images' => [$original[1]]])
+            ->call('save')
+            ->assertHasNoFormErrors();
+        Storage::disk('public')->assertMissing($original[0]);
+        Storage::disk('public')->assertExists($original[1]);
     }
 }
