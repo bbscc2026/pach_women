@@ -23,7 +23,11 @@ class PhotoUpload
             }
             $image->clear();
             $image->readImage($file->getRealPath().'[0]');
-            $image->autoOrientImage();
+            if (method_exists($image, 'autoOrientImage')) {
+                $image->autoOrientImage();
+            } elseif (method_exists($image, 'autoOrient')) {
+                $image->autoOrient();
+            }
             $image->thumbnailImage(2000, 2000, true, true);
             $image->setImageFormat('jpeg');
             $image->setImageCompressionQuality(85);
