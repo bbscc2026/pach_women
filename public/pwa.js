@@ -17,14 +17,14 @@
     // ---------- Styles (scoped by the pw- prefix, work on both shop and admin) ----------
     const style = document.createElement('style');
     style.textContent = `
-        .pw-toast{position:fixed;left:50%;transform:translateX(-50%);z-index:2147483000;display:flex;align-items:center;gap:12px;
-            max-width:calc(100vw - 24px);padding:10px 10px 10px 16px;border-radius:9999px;background:#141414;color:#fff;
+        .pw-toast{position:fixed;left:50%;transform:translateX(-50%);z-index:2147483000;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;
+            box-sizing:border-box;width:min(420px,calc(100vw - 24px));padding:10px 10px 10px 16px;border-radius:16px;background:#141414;color:#fff;
             font:500 14px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25);
             bottom:calc(env(safe-area-inset-bottom) + 84px);animation:pw-in .25s ease-out}
         @media (min-width:1024px){.pw-toast{bottom:24px}}
-        .pw-toast>span{white-space:normal;min-width:0;overflow-wrap:anywhere}
+        .pw-toast>span{white-space:normal;min-width:0;overflow-wrap:normal;word-break:normal}
         .pw-toast button{flex-shrink:0;min-height:44px}
-        .pw-toast button{border:0;border-radius:9999px;padding:8px 14px;font:600 13px/1 inherit;cursor:pointer}
+        .pw-toast button{border:0;border-radius:9999px;padding:8px 14px;font-family:inherit;font-size:13px;font-weight:600;line-height:1;white-space:nowrap;cursor:pointer}
         .pw-primary{background:#fff;color:#141414}
         .pw-ghost{background:transparent;color:#fff;opacity:.7;padding:8px!important}
         .pw-offline{position:fixed;top:0;left:0;right:0;z-index:2147483001;padding:calc(env(safe-area-inset-top) + 6px) 12px 6px;

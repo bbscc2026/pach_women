@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-title" content="PACH Admin">
 <meta name="pwa-install-banner" content="auto">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<script src="/pwa.js" defer data-navigate-once></script>
+<script src="/pwa.js?v={{ filemtime(public_path('pwa.js')) }}" defer data-navigate-once></script>
 <script src="{{ asset('admin-mobile.js') }}?v={{ filemtime(public_path('admin-mobile.js')) }}" defer data-navigate-once></script>
 <style>
     /* Compact workspace: reduce empty space without shrinking touch controls. */

@@ -35,7 +35,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="PACH">
-    <script src="/pwa.js" defer data-navigate-once></script>
+    <script src="/pwa.js?v={{ filemtime(public_path('pwa.js')) }}" defer data-navigate-once></script>
     @stack('head')
 </head>
 <body class="flex min-h-screen flex-col {{ $showTabBar ? 'pb-16 lg:pb-0' : '' }}">
